@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS-DS Webring</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <h1>🔗 CS-DS Webring</h1>
+        <p>A community of Computer Science & Data Science blogs and personal sites</p>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Welcome to the Webring</h2>
+            <p>Discover amazing blogs and sites from the CS/DS community. Navigate through member sites using the webring widget!</p>
+        </section>
+
+        <section class="directory">
+            <h2>Member Directory</h2>
+            <ul id="site-list">
+                <!-- Sites will be loaded from webring.json -->
+            </ul>
+        </section>
+
+        <section class="join">
+            <h2>Join the Webring</h2>
+            <p>Want to join? Check out our <a href="https://github.com/your-repo/cs-ds-webring">GitHub repository</a> for instructions.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CS-DS Webring | <a href="https://github.com/your-repo/cs-ds-webring">GitHub</a></p>
+    </footer>
+
+    <script>
+        // Load and display sites from webring.json
+        fetch('../data/webring.json')
+            .then(response => response.json())
+            .then(data => {
+                const siteList = document.getElementById('site-list');
+                data.sites.forEach(site => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="${site.url}" target="_blank">${site.name}</a> - ${site.description}`;
+                    siteList.appendChild(li);
+                });
+            })
+            .catch(err => console.error('Error loading sites:', err));
+    </script>
+</body>
+</html>

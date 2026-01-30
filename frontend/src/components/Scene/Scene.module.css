@@ -1,0 +1,31 @@
+.scene {
+  height: 240vh; /* controls how long the takeover feels */
+  position: relative;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(75, 46, 131, 0.25),
+    #0b0c1a 65%
+  );
+}
+
+.balls {
+  position: absolute;
+  inset: 0;
+}
+
+.listLayer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+  pointer-events: auto;
+}

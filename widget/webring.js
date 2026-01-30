@@ -1,18 +1,27 @@
 /**
- * CS-DS Webring Widget
+ * CS Webring Widget
  * Embeddable script for webring navigation (next/prev/random)
+ * 
+ * Usage: Add this to your site:
+ *   <div id="cs-webring"></div>
+ *   <script src="https://Devansh015.github.io/cs-ds-webring/widget/webring.js"></script>
  */
 
 (function() {
     'use strict';
 
-    const WEBRING_DATA_URL = 'https://your-domain.com/data/webring.json';
+    // CONFIGURE THIS: Set to your hosted webring URL
+    // For local testing: 'http://localhost:8000'
+    // For production: 'https://Devansh015.github.io/cs-ds-webring'
+    const WEBRING_BASE_URL = 'http://localhost:8000';
+    const WEBRING_DATA_URL = WEBRING_BASE_URL + '/data/webring.json';
     
     class WebringWidget {
         constructor(options = {}) {
             this.currentSiteUrl = options.currentSite || window.location.origin;
-            this.containerId = options.containerId || 'cs-ds-webring';
+            this.containerId = options.containerId || 'cs-webring';
             this.theme = options.theme || 'default';
+            this.ringName = options.ringName || 'CS Webring';
             this.sites = [];
             this.currentIndex = -1;
             
@@ -74,11 +83,20 @@
 
             container.innerHTML = `
                 <div class="webring-widget webring-theme-${this.theme}">
-                    <span class="webring-label">CS-DS Webring</span>
+                    <span class="webring-label">${this.ringName}</span>
                     <nav class="webring-nav">
-                        <a href="${prev ? prev.url : '#'}" class="webring-link webring-prev" title="Previous: ${prev ? prev.name : 'N/A'}">← Prev</a>
-                        <a href="#" class="webring-link webring-random" title="Random site">Random</a>
-                        <a href="${next ? next.url : '#'}" class="webring-link webring-next" title="Next: ${next ? next.name : 'N/A'}">Next →</a>
+                        <a href="${prev ? prev.url : '#'}" class="webring-link webring-prev" title="Previous: ${prev ? prev.name : 'N/A'}">
+                            ← Prev
+                        </a>
+                        <a href="${WEBRING_BASE_URL}" class="webring-link webring-home" title="View all sites">
+                            Hub
+                        </a>
+                        <a href="#" class="webring-link webring-random" title="Random site">
+                            Random
+                        </a>
+                        <a href="${next ? next.url : '#'}" class="webring-link webring-next" title="Next: ${next ? next.name : 'N/A'}">
+                            Next →
+                        </a>
                     </nav>
                 </div>
             `;
@@ -94,10 +112,13 @@
         }
     }
 
+    // Expose for manual initialization with options
+    window.WebringWidget = WebringWidget;
+
     // Auto-initialize if container exists
     document.addEventListener('DOMContentLoaded', () => {
-        if (document.getElementById('cs-ds-webring')) {
-            window.csdsWebring = new WebringWidget();
+        if (document.getElementById('cs-webring')) {
+            window.csWebring = new WebringWidget();
         }
     });
 

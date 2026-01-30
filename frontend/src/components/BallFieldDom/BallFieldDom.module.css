@@ -1,0 +1,33 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.ball {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+.ballGold {
+  background: rgba(253, 185, 19, 0.86);
+}
+
+.ballPurple {
+  background: rgba(75, 46, 131, 0.78);
+}
+
+.ballNeutral1 {
+  background: var(--ring-neutral-1);
+}
+
+.ballNeutral2 {
+  background: var(--ring-neutral-2);
+}

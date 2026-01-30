@@ -1,0 +1,14 @@
+{
+  "name": "CS-DS Webring",
+  "description": "A webring for Computer Science and Data Science enthusiasts",
+  "sites": [
+    {
+      "id": "example-site",
+      "name": "Example Blog",
+      "url": "https://example.com",
+      "description": "An example site to show the format",
+      "owner": "Example Owner",
+      "added": "2026-01-28"
+    }
+  ]
+}

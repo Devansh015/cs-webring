@@ -1,0 +1,37 @@
+.hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 12px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  background: rgba(75, 46, 131, 0.25);
+  border: 1px solid rgba(75, 46, 131, 0.5);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 4rem);
+}
+
+.subtitle {
+  color: var(--text-muted);
+}
+
+.arrow {
+  display: inline-block;
+  margin-top: 20px;
+}

@@ -4,16 +4,14 @@
  * 
  * Usage: Add this to your site:
  *   <div id="cs-webring"></div>
- *   <script src="https://Devansh015.github.io/cs-ds-webring/widget/webring.js"></script>
+ *   <script src="https://cs-webring-fju6a2fmj-devanshjain3245-8868s-projects.vercel.app/widget/webring.js"></script>
  */
 
 (function() {
     'use strict';
 
     // CONFIGURE THIS: Set to your hosted webring URL
-    // For local testing: 'http://localhost:8000'
-    // For production: 'https://Devansh015.github.io/cs-ds-webring'
-    const WEBRING_BASE_URL = 'http://localhost:8000';
+    const WEBRING_BASE_URL = 'https://cs-webring-fju6a2fmj-devanshjain3245-8868s-projects.vercel.app';
     const WEBRING_DATA_URL = WEBRING_BASE_URL + '/data/webring.json';
     
     class WebringWidget {

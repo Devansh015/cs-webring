@@ -149,6 +149,12 @@ export default function Scene() {
   return (
     <div ref={sceneRef} className={styles.scene}>
       <section className={styles.sticky}>
+        {/* Title overlay: hide as soon as balls start dispersing */}
+        {scatterAmount === 0 && (
+          <div className={styles.titleOverlay}>
+            <h1>CS RING</h1>
+          </div>
+        )}
         {!ballsFinished && (
           <div className={styles.balls} style={{ opacity: ballsOpacity }}>
             <BallFieldWebGL scatterAmount={scatterAmount} />
@@ -169,7 +175,9 @@ export default function Scene() {
 
         {showArrow && (
           <button type="button" className={styles.downArrow} onClick={onArrowClick} aria-label="Scroll down">
-            ↓
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 7L10 13L16 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
         )}
       </section>

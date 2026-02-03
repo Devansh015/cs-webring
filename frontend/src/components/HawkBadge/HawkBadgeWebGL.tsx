@@ -115,7 +115,7 @@ export default function HawkBadgeWebGL() {
         for (const p of data.paths) shapes.push(...SVGLoader.createShapes(p));
 
         geom = new THREE.ExtrudeGeometry(shapes, {
-          depth: 1.4,
+          depth: 24, // thicker
           bevelEnabled: true,
           bevelThickness: 0.12,
           bevelSize: 0.06,

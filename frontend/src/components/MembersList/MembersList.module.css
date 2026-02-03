@@ -17,6 +17,11 @@
 .icon {
   font-size: 18px;
   opacity: 0.8;
+  transition: filter 0.3s ease;
+}
+
+.iconFocused {
+  filter: brightness(0) saturate(100%) invert(93%) sepia(93%) saturate(30%) hue-rotate(125deg) brightness(107%) contrast(106%);
 }
 
 .search {
@@ -87,4 +92,11 @@
   .search {
     font-size: 10px;
   }
+}
+
+.noResults {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
 }

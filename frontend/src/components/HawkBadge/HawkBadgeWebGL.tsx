@@ -51,7 +51,6 @@ export default function HawkBadgeWebGL() {
     // Interaction state
     let dragging = false;
     let lastX = 0;
-    let lastY = 0;
 
     let userRotY = 0;
     let velY = 0;
@@ -64,7 +63,6 @@ export default function HawkBadgeWebGL() {
     const onPointerDown = (e: PointerEvent) => {
       dragging = true;
       lastX = e.clientX;
-      lastY = e.clientY;
       try {
         (renderer.domElement as any).setPointerCapture(e.pointerId);
       } catch {
@@ -77,7 +75,6 @@ export default function HawkBadgeWebGL() {
 
       const dx = e.clientX - lastX;
       lastX = e.clientX;
-      lastY = e.clientY;
 
       // Only allow spinning left/right around the vertical (Y) axis
       velY += dx * ROT_SPEED;
@@ -112,7 +109,7 @@ export default function HawkBadgeWebGL() {
         for (const p of data.paths) shapes.push(...SVGLoader.createShapes(p));
 
         geom = new THREE.ExtrudeGeometry(shapes, {
-          depth: 24, // thicker
+          depth: 4, // thicker
           bevelEnabled: true,
           bevelThickness: 0.12,
           bevelSize: 0.06,

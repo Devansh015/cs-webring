@@ -2,8 +2,6 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import styles from "./HawkBadgeWebGL.module.css";
 
-const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
-
 export default function HawkBadgeWebGL() {
   const hostRef = useRef<HTMLDivElement | null>(null);
 

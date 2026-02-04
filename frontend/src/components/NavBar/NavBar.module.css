@@ -1,0 +1,33 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: rgba(15, 16, 32, 0.65);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  font-weight: 800;
+}
+
+.links {
+  display: flex;
+  gap: 14px;
+}
+
+.join {
+  padding: 8px 12px;
+  border-radius: 9999px;
+  background: rgba(253, 185, 19, 0.18);
+  border: 1px solid rgba(253, 185, 19, 0.4);
+}

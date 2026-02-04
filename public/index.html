@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS Webring</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>🔗 CS Webring</h1>
+        <p>Connecting CS student personal websites</p>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Welcome to the Webring</h2>
+            <p>A webring links personal websites together in a ring. Use the widget on any member site to navigate through all connected sites!</p>
+        </section>
+
+        <section class="directory">
+            <h2>Member Directory</h2>
+            <ul id="site-list">
+                <!-- Sites will be loaded from webring.json -->
+            </ul>
+        </section>
+
+        <section class="join">
+            <h2>Join the Webring</h2>
+            <p>Want to join? Add your site to <code>data/webring.json</code> via Pull Request on <a href="https://github.com/Devansh015/cs-ds-webring">GitHub</a>.</p>
+            
+            <h3>Add Widget to Your Site</h3>
+            <p>Paste this code into your website:</p>
+            <pre><code>&lt;div id="cs-webring"&gt;&lt;/div&gt;
+&lt;link rel="stylesheet" href="https://Devansh015.github.io/cs-ds-webring/widget/themes.css"&gt;
+&lt;script src="https://Devansh015.github.io/cs-ds-webring/widget/webring.js"&gt;&lt;/script&gt;</code></pre>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 CS Webring | <a href="https://github.com/Devansh015/cs-ds-webring">GitHub</a></p>
+    </footer>
+
+    <script>
+        // Load and display sites from webring.json
+        fetch('../data/webring.json')
+            .then(response => response.json())
+            .then(data => {
+                const siteList = document.getElementById('site-list');
+                data.sites.forEach(site => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="${site.url}" target="_blank">${site.name}</a> - ${site.description}`;
+                    siteList.appendChild(li);
+                });
+            })
+            .catch(err => console.error('Error loading sites:', err));
+    </script>
+</body>
+</html>

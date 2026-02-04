@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Test - Simulating devanshjain.me</title>
+    <link rel="stylesheet" href="widget/themes.css">
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 30px; }
+        .info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Widget Test Page</h1>
+    
+    <div class="info">
+        <p><strong>Simulating:</strong> devanshjain.me</p>
+        <p><strong>Expected Next:</strong> yashns.me</p>
+        <p><strong>Expected Prev:</strong> yashns.me (wraps around)</p>
+    </div>
+
+    <h2>Webring Widget:</h2>
+    <div id="cs-webring"></div>
+
+    <script src="widget/webring.js"></script>
+    <script>
+        // Override the auto-initialized widget to simulate being on devanshjain.me
+        window.csWebring = new WebringWidget({
+            currentSite: 'https://devanshjain.me'
+        });
+    </script>
+</body>
+</html>

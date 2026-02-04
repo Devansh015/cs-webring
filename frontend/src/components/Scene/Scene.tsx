@@ -23,6 +23,9 @@ export default function Scene() {
   const [ballsFinished, setBallsFinished] = useState(false);
   const [hasVisitedList, setHasVisitedList] = useState(false);
 
+  // NEW: intro title should only ever show once
+  const [introDismissed, setIntroDismissed] = useState(false);
+
   // "Gone" means scatter basically maxed, plus a little time for them to exit
   const ballsGone = clamp01(remap(scatterAmount, 0.92, 1.0));
 
@@ -31,14 +34,22 @@ export default function Scene() {
   }, [ballsGone, ballsFinished]);
 
   useEffect(() => {
-    if (listVisible) setHasVisitedList(true);
+    if (listVisible) {
+      setHasVisitedList(true);
+      setIntroDismissed(true); // once list is visible, never show intro again
+    }
   }, [listVisible]);
+
+  // NEW: as soon as user scrolls a tiny amount, dismiss intro permanently
+  useEffect(() => {
+    if (!introDismissed && p > 0.06) setIntroDismissed(true);
+  }, [p, introDismissed]);
 
   useEffect(() => {
     const el = sceneRef.current;
     if (!el) return;
 
-    const TRIGGER_PROGRESS = 0.30; // user has scrolled far enough to commit to the transition
+    const TRIGGER_PROGRESS = 0.3; // user has scrolled far enough to commit to the transition
     const TARGET_PROGRESS = 0.46; // where the list is fully settled
 
     const computeRawP = () => {
@@ -54,22 +65,18 @@ export default function Scene() {
 
       const rawP = computeRawP();
 
-      // Only trigger after user has scrolled enough to start the experience
       if (rawP < TRIGGER_PROGRESS) return;
 
-      // Never pull the user upward, if they already passed the target, do nothing
       if (rawP >= TARGET_PROGRESS - 0.01) {
         autoScrollDoneRef.current = true;
         return;
       }
 
-      // Compute absolute target Y
       const rect = el.getBoundingClientRect();
       const sceneTop = window.scrollY + rect.top;
       const scrollSpan = Math.max(1, el.offsetHeight - window.innerHeight);
       const targetY = sceneTop + scrollSpan * TARGET_PROGRESS;
 
-      // Extra safety, never scroll upward
       if (window.scrollY >= targetY - 8) {
         autoScrollDoneRef.current = true;
         return;
@@ -77,7 +84,6 @@ export default function Scene() {
 
       autoScrollCancelRef.current = false;
 
-      // Cancel if the user interacts
       const cancel = () => {
         autoScrollCancelRef.current = true;
         autoScrollDoneRef.current = true;
@@ -92,13 +98,11 @@ export default function Scene() {
 
       autoScrollDoneRef.current = true;
 
-      // Drive scroll forward to complete the animation and land on the list
       requestAnimationFrame(() => {
         slowScrollToGuarded(targetY, 950, () => autoScrollCancelRef.current);
       });
     };
 
-    // Try on scroll and also on an animation frame loop for trackpads that coast
     const onScroll = () => startAutoScrollIfNeeded();
     window.addEventListener("scroll", onScroll, { passive: true });
 
@@ -109,7 +113,6 @@ export default function Scene() {
     };
     raf = requestAnimationFrame(tick);
 
-    // initial check
     startAutoScrollIfNeeded();
 
     return () => {
@@ -118,15 +121,12 @@ export default function Scene() {
     };
   }, []);
 
-  // Balls are visible only before they finish once
   const ballsOpacity = ballsFinished ? 0 : 1;
 
-  // List motion
   const startYvh = 78;
   const endYvh = 0;
   const listY = lerp(startYvh, endYvh, easeOutCubic(listLaunch));
 
-  // Show hovering hawk when user has been to the list and scrolls back up
   const showHawk = ballsFinished && hasVisitedList && !listVisible;
 
   const showArrow = p < 0.08 && !ballsFinished;
@@ -146,15 +146,17 @@ export default function Scene() {
     slowScrollTo(sceneTop + scrollSpan * targetProgress, 1300);
   };
 
+  const showTitle = !introDismissed && !ballsFinished;
+
   return (
     <div ref={sceneRef} className={styles.scene}>
       <section className={styles.sticky}>
-        {/* Title overlay: hide as soon as balls start dispersing */}
-        {scatterAmount === 0 && (
+        {showTitle && (
           <div className={styles.titleOverlay}>
             <h1>CS RING</h1>
           </div>
         )}
+
         {!ballsFinished && (
           <div className={styles.balls} style={{ opacity: ballsOpacity }}>
             <BallFieldWebGL scatterAmount={scatterAmount} />
@@ -176,7 +178,13 @@ export default function Scene() {
         {showArrow && (
           <button type="button" className={styles.downArrow} onClick={onArrowClick} aria-label="Scroll down">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 7L10 13L16 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M4 7L10 13L16 7"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         )}
@@ -222,7 +230,6 @@ function slowScrollToGuarded(targetY: number, durationMs: number, isCancelled: (
   const startY = window.scrollY;
   const delta = targetY - startY;
 
-  // Never scroll upward
   if (delta <= 0) return;
 
   const start = performance.now();
@@ -234,7 +241,6 @@ function slowScrollToGuarded(targetY: number, durationMs: number, isCancelled: (
     const t = clamp01((now - start) / durationMs);
     const nextY = startY + delta * ease(t);
 
-    // Guard against any upward movement
     if (nextY >= window.scrollY) {
       window.scrollTo(0, nextY);
     }

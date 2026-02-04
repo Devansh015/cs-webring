@@ -8,8 +8,8 @@
 }
 
 .hit {
-  width: 320px;
-  height: 320px;
+  width: min(60vmin, 560px);
+  height: min(60vmin, 560px);
   pointer-events: auto;
   touch-action: none;
 }
@@ -20,7 +20,3 @@
   display: block;
 }
 
-.renderHost {
-  position: absolute;
-  inset: 0;
-}

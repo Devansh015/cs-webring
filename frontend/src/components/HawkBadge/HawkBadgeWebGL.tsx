@@ -7,11 +7,13 @@ import hawkSvgUrl from "../../assets/golden-hawk.svg?url";
 const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
 
 export default function HawkBadgeWebGL() {
+  const renderHostRef = useRef<HTMLDivElement | null>(null);
   const hitRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const host = hitRef.current;
-    if (!host) return;
+    const host = renderHostRef.current;
+    const hit = hitRef.current;
+    if (!host || !hit) return;
 
     const scene = new THREE.Scene();
 
@@ -60,12 +62,13 @@ export default function HawkBadgeWebGL() {
       dragging = true;
       lastX = e.clientX;
       try {
-        (host as any).setPointerCapture(e.pointerId);
+        (hit as any).setPointerCapture(e.pointerId);
       } catch {}
     };
 
     const onPointerMove = (e: PointerEvent) => {
       if (!dragging) return;
+
       const dx = e.clientX - lastX;
       lastX = e.clientX;
 
@@ -77,11 +80,11 @@ export default function HawkBadgeWebGL() {
     const endDrag = (e: PointerEvent) => {
       dragging = false;
       try {
-        (host as any).releasePointerCapture(e.pointerId);
+        (hit as any).releasePointerCapture(e.pointerId);
       } catch {}
     };
 
-    host.addEventListener("pointerdown", onPointerDown);
+    hit.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("pointerup", endDrag, { passive: true });
     window.addEventListener("pointercancel", endDrag, { passive: true });
@@ -119,7 +122,7 @@ export default function HawkBadgeWebGL() {
         const vw = window.innerWidth || 1440;
         const scaleFactor = clamp(vw / 1440, 0.8, 1.5);
 
-        const sXY = 0.0045 * scaleFactor;
+        const sXY = 0.003 * scaleFactor;
         const sZ = 0.02 * scaleFactor;
         geom.scale(sXY, -sXY, sZ);
 
@@ -176,7 +179,7 @@ export default function HawkBadgeWebGL() {
     return () => {
       window.removeEventListener("resize", resize);
 
-      host.removeEventListener("pointerdown", onPointerDown);
+      hit.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", endDrag);
       window.removeEventListener("pointercancel", endDrag);
@@ -194,6 +197,7 @@ export default function HawkBadgeWebGL() {
 
   return (
     <div className={styles.layer} aria-hidden="true">
+      <div ref={renderHostRef} className={styles.renderHost} />
       <div ref={hitRef} className={styles.hit} />
     </div>
   );

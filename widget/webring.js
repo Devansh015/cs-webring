@@ -1,124 +1,167 @@
 /**
  * CS Webring Widget
- * Embeddable script for webring navigation (next/prev/random)
- * 
- * Usage: Add this to your site:
+ * Embeddable script for webring navigation (prev , logo , next)
+ *
+ * Usage:
  *   <div id="cs-webring"></div>
+ *   <script>
+ *     window.WebringWidgetOptions = {
+ *       theme: "default",
+ *       logoLight: "https://cs-webring.xyz/widget/logo-light.png",
+ *       logoDark: "https://cs-webring.xyz/widget/logo-dark.png",
+ *       // or: logo: "https://example.com/my-logo.png"
+ *     };
+ *   </script>
  *   <script src="https://cs-webring.xyz/widget/webring.js"></script>
  */
 
-(function() {
-    'use strict';
+(function () {
+  "use strict";
 
-    const WEBRING_BASE_URL = 'https://cs-webring.xyz';
-    const WEBRING_DATA_URL = WEBRING_BASE_URL + '/data/webring.json';
-    
-    class WebringWidget {
-        constructor(options = {}) {
-            this.currentSiteUrl = options.currentSite || window.location.origin;
-            this.containerId = options.containerId || 'cs-webring';
-            this.theme = options.theme || 'default';
-            this.ringName = options.ringName || 'CS Webring';
-            this.sites = [];
-            this.currentIndex = -1;
-            
-            this.init();
-        }
+  const WEBRING_BASE_URL = "https://cs-webring.xyz";
+  const WEBRING_DATA_URL = WEBRING_BASE_URL + "/data/webring.json";
 
-        async init() {
-            try {
-                await this.loadSites();
-                this.findCurrentSite();
-                this.render();
-            } catch (error) {
-                console.error('Webring Widget Error:', error);
-            }
-        }
+  function prefersDark() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  }
 
-        async loadSites() {
-            const response = await fetch(WEBRING_DATA_URL);
-            const data = await response.json();
-            this.sites = data.sites;
-        }
+  function resolveLogoUrl(opts) {
+    // 1) explicit custom logo always wins
+    if (opts.logo) return opts.logo;
 
-        findCurrentSite() {
-            this.currentIndex = this.sites.findIndex(site => 
-                this.currentSiteUrl.includes(new URL(site.url).hostname)
-            );
-        }
+    // 2) choose based on system theme if provided
+    const dark = prefersDark();
+    if (dark && opts.logoDark) return opts.logoDark;
+    if (!dark && opts.logoLight) return opts.logoLight;
 
-        getPrevSite() {
-            if (this.currentIndex === -1 || this.sites.length === 0) return null;
-            const prevIndex = (this.currentIndex - 1 + this.sites.length) % this.sites.length;
-            return this.sites[prevIndex];
-        }
+    // 3) fallback
+    return opts.logoLight || opts.logoDark || (WEBRING_BASE_URL + "/widget/logo.png");
+  }
 
-        getNextSite() {
-            if (this.currentIndex === -1 || this.sites.length === 0) return null;
-            const nextIndex = (this.currentIndex + 1) % this.sites.length;
-            return this.sites[nextIndex];
-        }
+  class WebringWidget {
+    constructor(options = {}) {
+      const globalOptions = window.WebringWidgetOptions || {};
+      const opts = { ...globalOptions, ...options };
 
-        getRandomSite() {
-            if (this.sites.length === 0) return null;
-            let randomIndex;
-            do {
-                randomIndex = Math.floor(Math.random() * this.sites.length);
-            } while (randomIndex === this.currentIndex && this.sites.length > 1);
-            return this.sites[randomIndex];
-        }
+      this.currentSiteUrl = opts.currentSite || window.location.origin;
+      this.containerId = opts.containerId || "cs-webring";
+      this.theme = opts.theme || "default";
 
-        render() {
-            const container = document.getElementById(this.containerId);
-            if (!container) {
-                console.error(`Container #${this.containerId} not found`);
-                return;
-            }
+      // Logo options
+      this.logo = opts.logo || null;
+      this.logoLight = opts.logoLight || null;
+      this.logoDark = opts.logoDark || null;
+      this.logoAlt = opts.logoAlt || "CS Webring";
+      this.logoLink = opts.logoLink || WEBRING_BASE_URL;
 
-            const prev = this.getPrevSite();
-            const next = this.getNextSite();
+      this.sites = [];
+      this.currentIndex = -1;
 
-            container.innerHTML = `
-                <div class="webring-widget webring-theme-${this.theme}">
-                    <span class="webring-label">${this.ringName}</span>
-                    <nav class="webring-nav">
-                        <a href="${prev ? prev.url : '#'}" class="webring-link webring-prev" title="Previous: ${prev ? prev.name : 'N/A'}">
-                            ← Prev
-                        </a>
-                        <a href="${WEBRING_BASE_URL}" class="webring-link webring-home" title="View all sites">
-                            Hub
-                        </a>
-                        <a href="#" class="webring-link webring-random" title="Random site">
-                            Random
-                        </a>
-                        <a href="${next ? next.url : '#'}" class="webring-link webring-next" title="Next: ${next ? next.name : 'N/A'}">
-                            Next →
-                        </a>
-                    </nav>
-                </div>
-            `;
-
-            // Add random click handler
-            const randomLink = container.querySelector('.webring-random');
-            if (randomLink) {
-                randomLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const randomSite = this.getRandomSite();
-                    if (randomSite) {
-                        window.location.href = randomSite.url;
-                    }
-                });
-            }
-        }
+      this.init();
     }
 
-    // Expose for manual initialization with options
-    window.WebringWidget = WebringWidget;
+    async init() {
+      try {
+        await this.loadSites();
+        this.findCurrentSite();
+        this.render();
+      } catch (error) {
+        console.error("Webring Widget Error:", error);
+      }
+    }
 
-    // Auto-initialize if container exists
-    document.addEventListener('DOMContentLoaded', () => {
-        if (document.getElementById('cs-webring')) {
-            window.csWebring = new WebringWidget();
+    async loadSites() {
+      const response = await fetch(WEBRING_DATA_URL);
+      const data = await response.json();
+      this.sites = data.sites || [];
+    }
+
+    findCurrentSite() {
+      this.currentIndex = this.sites.findIndex((site) => {
+        try {
+          return this.currentSiteUrl.includes(new URL(site.url).hostname);
+        } catch {
+          return false;
         }
-    });
+      });
+    }
+
+    getPrevSite() {
+      if (this.currentIndex === -1 || this.sites.length === 0) return null;
+      const prevIndex = (this.currentIndex - 1 + this.sites.length) % this.sites.length;
+      return this.sites[prevIndex];
+    }
+
+    getNextSite() {
+      if (this.currentIndex === -1 || this.sites.length === 0) return null;
+      const nextIndex = (this.currentIndex + 1) % this.sites.length;
+      return this.sites[nextIndex];
+    }
+
+    render() {
+      const container = document.getElementById(this.containerId);
+      if (!container) {
+        console.error(`Container #${this.containerId} not found`);
+        return;
+      }
+
+      const prev = this.getPrevSite();
+      const next = this.getNextSite();
+
+      const prevUrl = prev ? prev.url : WEBRING_BASE_URL;
+      const nextUrl = next ? next.url : WEBRING_BASE_URL;
+
+      const prevName = prev ? prev.name : "Hub";
+      const nextName = next ? next.name : "Hub";
+
+      const logoUrl = resolveLogoUrl({
+        logo: this.logo,
+        logoLight: this.logoLight,
+        logoDark: this.logoDark,
+      });
+
+      container.innerHTML = `
+        <div class="webring-widget webring-theme-${this.theme}">
+          <a href="${prevUrl}" class="webring-link webring-prev" title="Previous: ${escapeHtml(prevName)}">
+            ${escapeHtml(prevName)}
+          </a>
+
+          <a href="${this.logoLink}" class="webring-logoLink" title="Webring home" aria-label="Webring home">
+            <img class="webring-logo" src="${logoUrl}" alt="${escapeHtml(this.logoAlt)}" />
+          </a>
+
+          <a href="${nextUrl}" class="webring-link webring-next" title="Next: ${escapeHtml(nextName)}">
+            ${escapeHtml(nextName)}
+          </a>
+        </div>
+      `;
+
+      // Re-render on theme change (system light/dark) if using logoLight or logoDark
+      if (this.logoLight || this.logoDark) {
+        const mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+        if (mq && mq.addEventListener) {
+          mq.addEventListener("change", () => this.render());
+        }
+      }
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  // Expose for manual initialization with options
+  window.WebringWidget = WebringWidget;
+
+  // Auto-initialize if container exists
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.getElementById("cs-webring")) {
+      window.csWebring = new WebringWidget();
+    }
+  });
 })();

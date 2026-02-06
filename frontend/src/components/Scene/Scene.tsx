@@ -151,6 +151,15 @@ export default function Scene() {
   return (
     <div ref={sceneRef} className={styles.scene}>
       <section className={styles.sticky}>
+      <a
+        href="https://github.com/Devansh015/cs-webring"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.topLeftLogo}
+        aria-label="CS Webring GitHub"
+      >
+        <img src="/logo.png" alt="CS Webring logo" />
+      </a>
         {showTitle && (
           <div className={styles.titleOverlay}>
             <h1>CS RING</h1>

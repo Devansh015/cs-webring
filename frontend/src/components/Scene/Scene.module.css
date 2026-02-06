@@ -13,9 +13,11 @@
 }
 
 .titleOverlay h1 {
+  font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
   font-size: clamp(3.5rem, 12vw, 8rem);
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em; /* slightly tighter, Nunito looks better this way */
   color: #fff;
   text-shadow: 0 2px 16px #0005, 0 1px 0 var(--wlu-purple);
   margin: 0;
@@ -101,4 +103,27 @@
 
 .downArrow:active {
   transform: translateX(-50%) translateY(-2px);
+}
+
+.topLeftLogo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.topLeftLogo img {
+  width: clamp(64px, 5vmin, 96px);
+  height: clamp(64px, 5vmin, 96px);
+  object-fit: contain;
+
+  opacity: 0.9;
+
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.topLeftLogo:hover img {
+  opacity: 1;
+  transform: scale(1.05);
 }

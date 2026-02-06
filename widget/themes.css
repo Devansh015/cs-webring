@@ -4,117 +4,121 @@
 
 /* Base Widget Styles */
 .webring-widget {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-radius: 8px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-size: 14px;
-}
-
-.webring-label {
-    font-weight: 600;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.webring-nav {
-    display: flex;
-    gap: 1rem;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1;
 }
 
 .webring-link {
-    text-decoration: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+  text-decoration: none;
+  padding: 0.25rem 0.35rem;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  white-space: nowrap;
 }
 
-.webring-link:hover {
-    text-decoration: none;
+.webring-logoLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.webring-logo {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
 }
 
 /* Default Theme */
 .webring-theme-default {
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-    color: #333;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  color: #333;
 }
 
 .webring-theme-default .webring-link {
-    color: #667eea;
+  color: #667eea;
 }
 
 .webring-theme-default .webring-link:hover {
-    background: #667eea;
-    color: white;
+  background: #667eea;
+  color: #fff;
 }
 
 /* Dark Theme */
 .webring-theme-dark {
-    background: #1a1a2e;
-    border: 1px solid #333;
-    color: #e0e0e0;
+  background: #1a1a2e;
+  border: 1px solid #333;
+  color: #e0e0e0;
 }
 
 .webring-theme-dark .webring-link {
-    color: #a5d6ff;
+  color: #a5d6ff;
 }
 
 .webring-theme-dark .webring-link:hover {
-    background: #333;
-    color: #fff;
+  background: #333;
+  color: #fff;
 }
 
 /* Minimal Theme */
 .webring-theme-minimal {
-    background: transparent;
-    border: none;
-    padding: 0.5rem;
+  background: transparent;
+  border: none;
+  padding: 0.3rem 0.25rem;
 }
 
 .webring-theme-minimal .webring-link {
-    color: inherit;
-    opacity: 0.7;
+  color: inherit;
+  opacity: 0.75;
 }
 
 .webring-theme-minimal .webring-link:hover {
-    opacity: 1;
+  opacity: 1;
+  background: transparent;
 }
 
 /* Neon Theme */
 .webring-theme-neon {
-    background: #0a0a0f;
-    border: 1px solid #00ff88;
-    color: #00ff88;
-    box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+  background: #0a0a0f;
+  border: 1px solid #00ff88;
+  color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
 }
 
 .webring-theme-neon .webring-link {
-    color: #00ff88;
+  color: #00ff88;
 }
 
 .webring-theme-neon .webring-link:hover {
-    background: #00ff88;
-    color: #0a0a0f;
+  background: #00ff88;
+  color: #0a0a0f;
 }
 
 /* Retro Theme */
 .webring-theme-retro {
-    background: #c0c0c0;
-    border: 2px outset #fff;
-    color: #000;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
+  background: #c0c0c0;
+  border: 2px outset #fff;
+  color: #000;
+  font-family: "MS Sans Serif", Arial, sans-serif;
 }
 
 .webring-theme-retro .webring-link {
-    color: #0000ff;
-    text-decoration: underline;
+  color: #0000ff;
+  text-decoration: underline;
 }
 
 .webring-theme-retro .webring-link:hover {
-    color: #ff0000;
+  color: #ff0000;
+  background: transparent;
 }

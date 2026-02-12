@@ -10,6 +10,9 @@ const repoRoot = path.resolve(__dirname, "..");
 const src = path.resolve(repoRoot, "data/webring.json");
 const dest = path.resolve(repoRoot, "frontend/public/webring.json");
 
+const srcMembers = path.resolve(repoRoot, "data/members.json");
+const destMembers = path.resolve(repoRoot, "frontend/public/members.json");
+
 fs.mkdirSync(path.dirname(dest), { recursive: true });
 
 if (!fs.existsSync(src)) {
@@ -18,4 +21,12 @@ if (!fs.existsSync(src)) {
 }
 
 fs.copyFileSync(src, dest);
+console.log(`Synced ${src} -> ${dest}`);
+
+if (fs.existsSync(srcMembers)) {
+  fs.copyFileSync(srcMembers, destMembers);
+  console.log(`Synced ${srcMembers} -> ${destMembers}`);
+} else {
+  console.warn(`members.json not found at ${srcMembers}`);
+}
 console.log(`Synced ${src} -> ${dest}`);

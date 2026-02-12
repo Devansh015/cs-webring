@@ -5,10 +5,12 @@ import styles from "./MembersList.module.css";
 export type Site = {
   id: string;
   name: string;
-  url: string;
+  url?: string;
+  website?: string;
   description?: string;
   owner?: string;
   added?: string;
+  year?: number;
 };
 
 function domainFromUrl(url: string) {
@@ -20,24 +22,72 @@ function domainFromUrl(url: string) {
   }
 }
 
-export default function MembersList({ sites }: { sites: Site[] }) {
+function normalizeUrl(site: Site): string {
+  return (site.url || site.website || "").trim();
+}
+
+export default function MembersList({ sites }: { sites?: Site[] } = {}) {
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
+  const [loadedSites, setLoadedSites] = useState<Site[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load from /members.json if not passed in
+  useEffect(() => {
+    if (sites && sites.length > 0) {
+      setLoadedSites(sites);
+      return;
+    }
+
+    fetch("/members.json", { cache: "no-store" })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load members.json");
+        return res.json();
+      })
+      .then((data) => {
+        let normalized: Site[] = [];
+        if (Array.isArray(data)) {
+          normalized = data.map((item: any, idx: number) => ({
+            id: item.id || `member-${idx}`,
+            name: item.name || "",
+            url: item.url || item.website || "",
+            website: item.website || item.url || "",
+            year: item.year,
+            description: item.description,
+            owner: item.owner,
+          }));
+        } else if (data.members && Array.isArray(data.members)) {
+          normalized = data.members.map((item: any, idx: number) => ({
+            id: item.id || `member-${idx}`,
+            name: item.name || "",
+            url: item.url || item.website || "",
+            website: item.website || item.url || "",
+            year: item.year,
+            description: item.description,
+            owner: item.owner,
+          }));
+        }
+        setLoadedSites(normalized);
+      })
+      .catch((err) => {
+        console.error("Error loading members:", err);
+        setLoadedSites(sites || []);
+      });
+  }, [sites]);
 
   const fuse = useMemo(
     () =>
-      new Fuse(sites, {
+      new Fuse(loadedSites, {
         keys: ["name", "url", "owner", "description"],
         threshold: 0.35,
       }),
-    [sites]
+    [loadedSites]
   );
 
   const results = useMemo(() => {
-    if (!query.trim()) return sites;
+    if (!query.trim()) return loadedSites;
     return fuse.search(query).map((r) => r.item);
-  }, [query, fuse, sites]);
+  }, [query, fuse, loadedSites]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -68,17 +118,20 @@ export default function MembersList({ sites }: { sites: Site[] }) {
       </div>
       <div className={styles.rule} />
       <div className={styles.grid}>
-        {results.map((site) => (
-          <a
-            key={site.id}
-            href={site.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.item}
-          >
-            {domainFromUrl(site.url)}
-          </a>
-        ))}
+        {results.map((site) => {
+          const url = normalizeUrl(site);
+          return (
+            <a
+              key={site.id}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.item}
+            >
+              {domainFromUrl(url)}
+            </a>
+          );
+        })}
       </div>
     </div>
   );

@@ -47,10 +47,10 @@
 
 .grid {
   margin-top: 46px;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  column-gap: 40px;
-  row-gap: 56px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 56px 60px;
 }
 
 .item {
@@ -70,7 +70,7 @@
 
 @media (max-width: 1200px) {
   .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 40px 30px;
   }
 }
 
@@ -79,14 +79,15 @@
     width: 90vw;
   }
   .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 24px;
-    row-gap: 36px;
+    gap: 36px 24px;
   }
 }
 
 @media (max-width: 500px) {
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 16px;
+  }
+  .item {
+    min-width: 100px;
   }
 }

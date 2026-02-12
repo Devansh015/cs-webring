@@ -8,9 +8,9 @@ export function useWebring() {
   useEffect(() => {
     let cancelled = false;
 
-    fetch("/webring.json", { cache: "no-store" })
+    fetch("/members.json", { cache: "no-store" })
       .then(async (res) => {
-        if (!res.ok) throw new Error(`Failed to load webring.json (${res.status})`);
+        if (!res.ok) throw new Error(`Failed to load members.json (${res.status})`);
         return (await res.json()) as WebringData;
       })
       .then((json) => {

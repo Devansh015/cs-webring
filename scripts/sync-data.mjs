@@ -7,8 +7,8 @@ const __dirname = path.dirname(__filename);
 
 const repoRoot = path.resolve(__dirname, "..");
 
-const src = path.resolve(repoRoot, "data/webring.json");
-const dest = path.resolve(repoRoot, "frontend/public/webring.json");
+const src = path.resolve(repoRoot, "data/members.json");
+const dest = path.resolve(repoRoot, "frontend/public/members.json");
 
 const srcMembers = path.resolve(repoRoot, "data/members.json");
 const destMembers = path.resolve(repoRoot, "frontend/public/members.json");

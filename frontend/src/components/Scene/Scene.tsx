@@ -12,6 +12,9 @@ export default function Scene() {
   const autoScrollDoneRef = useRef(false);
   const autoScrollCancelRef = useRef(false);
 
+  // NEW: track if arrow has been clicked
+  const [arrowClicked, setArrowClicked] = useState(false);
+
   // Scatter happens early
   const scatterAmount = clamp01(remap(p, 0.0, 0.28));
 
@@ -44,6 +47,23 @@ export default function Scene() {
   useEffect(() => {
     if (!introDismissed && p > 0.06) setIntroDismissed(true);
   }, [p, introDismissed]);
+
+  // NEW: prevent scrolling until arrow is clicked
+  useEffect(() => {
+    if (arrowClicked) return;
+
+    const preventScroll = (e: WheelEvent | TouchEvent) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    window.addEventListener("touchmove", preventScroll, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", preventScroll);
+      window.removeEventListener("touchmove", preventScroll);
+    };
+  }, [arrowClicked]);
 
   useEffect(() => {
     const el = sceneRef.current;
@@ -132,6 +152,7 @@ export default function Scene() {
   const showArrow = p < 0.08 && !ballsFinished;
 
   const onArrowClick = () => {
+    setArrowClicked(true); // unlock scrolling
     const el = sceneRef.current;
     if (!el) return;
 

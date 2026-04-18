@@ -90,5 +90,7 @@ This project brings that idea to CS students and alumni by giving everyone a sim
 
 If a case is unclear, it can be reviewed individually.
 
+Inspired by UW CS Webring
+
 ---
 **Authors:** Devansh Jain, Yash Soni

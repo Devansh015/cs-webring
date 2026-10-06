@@ -10,16 +10,6 @@
     "website": "https://yashns.me/"
   },
   {
-    "name": "Amun Ahmad",
-    "year": 2027,
-    "website": "https://amunahmad.com"
-  },
-  {
-    "name": "Aryan Kakkar",
-    "year": 2027,
-    "website": "https://aryankakkar.vercel.app/"
-  },
-  {
     "name": "Geeran Balarajan",
     "year": 2027,
     "website": "https://geeran.me/"
@@ -33,6 +23,16 @@
     "name": "Dharm Patel",
     "year": 2028,
     "website": "https://dharm.me/"
+  },
+  {
+    "name": "Amun Ahmad",
+    "year": 2027,
+    "website": "https://amunahmad.com"
+  },
+  {
+    "name": "Aryan Kakkar",
+    "year": 2027,
+    "website": "https://aryankakkar.vercel.app/"
   },
   {
     "name": "Shervin Zare",
